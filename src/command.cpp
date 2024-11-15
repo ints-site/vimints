@@ -25,31 +25,31 @@ std::vector<std::string> CommandProcessor::splitCommand(const std::string& comma
     return tokens;
 }
 bool CommandProcessor::executeCommand(const std::string& cmd, const std::vector<std::string>& args) {
-    // 基本的命令处理逻辑
     if (cmd == "quit" || cmd == "q") {
-        // 退出编辑器
-        return true;
+        exit(0);  // 直接退出
     }
     
     if (cmd == "save" || cmd == "w") {
-        // 保存文件
         if (!args.empty()) {
-            // 如果提供了文件名，使用另存为
             return m_editor.saveFileAs(args[0]);
         }
-        // 否则保存当前文件
         return m_editor.saveFile();
     }
     
     if (cmd == "open" || cmd == "e") {
-        // 打开文件
         if (!args.empty()) {
             return m_editor.openFile(args[0]);
         }
         return false;
     }
     
-    // 可以根据需要添加更多命令处理
+    if (cmd == "new" || cmd == "n") {
+        // 使用新增的公共方法
+        m_editor.clearLines();
+        m_editor.addEmptyLine();
+        m_editor.resetCurrentFile();
+        return true;
+    }
     
     return false;
 }

@@ -54,9 +54,13 @@ void UI::render() {
     displayStatusBar();
 }
 void UI::handleInput() {
-    int ch = getChar();  // 使用跨平台的输入函数
+    int ch = getChar();
     switch (m_editor.getMode()) {
         case EditorMode::NORMAL:
+        case EditorMode::VISUAL_CHAR:
+        case EditorMode::VISUAL_LINE:
+        case EditorMode::VISUAL_BLOCK:
+            // 统一处理普通和可视模式
             switch (ch) {
                 case 'i': 
                     m_editor.setMode(EditorMode::INSERT); 
@@ -78,9 +82,39 @@ void UI::handleInput() {
                     break;
                 case 'O': 
                     m_editor.setMode(EditorMode::INSERT);
-                    m_editor.m_cursorColumn = 0;
+                    m_editor.setCursorColumn(0);
                     m_editor.insertText("");  // 在当前行上方插入新行
                     m_statusMessage = "-- 插入模式 --";
+                    break;
+                case 'y': 
+                    m_editor.copyText(); 
+                    m_statusMessage = "已复制行";
+                    break;
+                case 'p': 
+                    m_editor.pasteText(); 
+                    m_statusMessage = "已粘贴";
+                    break;
+                case '0': m_editor.moveToLineStart(); break;
+                case '$': m_editor.moveToLineEnd(); break;
+                case 'w': m_editor.moveWordForward(); break;
+                case 'b': m_editor.moveWordBackward(); break;
+                
+                case 'v': 
+                    m_editor.startVisualMode(EditorMode::VISUAL_CHAR);
+                    m_statusMessage = "-- VISUAL --";
+                    break;
+                case 'V': 
+                    m_editor.startVisualMode(EditorMode::VISUAL_LINE);
+                    m_statusMessage = "-- VISUAL LINE --";
+                    break;
+                
+                case '/':
+                    m_editor.setMode(EditorMode::COMMAND);
+                    m_statusMessage = "搜索: ";
+                    break;
+                case 27: // ESC键
+                    m_editor.setMode(EditorMode::NORMAL);
+                    m_statusMessage = "";
                     break;
             }
             break;
@@ -95,8 +129,8 @@ void UI::handleInput() {
                     m_editor.insertText("");  // 插入空行
                     break;
                 case 127: // 退格键
-                    if (m_editor.m_cursorColumn > 0) {
-                        m_editor.m_cursorColumn--;
+                    if (m_editor.getCursorColumn() > 0) {
+                        m_editor.setCursorColumn(m_editor.getCursorColumn() - 1);
                         m_editor.deleteText();
                     }
                     break;
@@ -117,14 +151,15 @@ void UI::handleInput() {
                     m_statusMessage = "";
                     break;
                 case 13: // 回车键
-                    if (m_statusMessage == ":q") {
-                        // TODO: 实现退出逻辑
-                        exit(0);
-                    } else if (m_statusMessage == ":w") {
-                        if (m_editor.saveFile()) {
-                            m_statusMessage = "文件已保存";
+                    if (m_statusMessage.length() > 1 && m_statusMessage[0] == ':') {
+                        std::string command = m_statusMessage.substr(1);
+                        if (m_editor.executeCommand(command)) {
+                            if (command == "q" || command.find("wq") != std::string::npos) {
+                                exit(0);  // 退出程序
+                            }
+                            m_statusMessage = "命令执行成功";
                         } else {
-                            m_statusMessage = "保存失败";
+                            m_statusMessage = "无效命令";
                         }
                     }
                     break;
@@ -150,6 +185,9 @@ void UI::displayStatusBar() {
         case EditorMode::NORMAL: modeStr = "普通模式"; break;
         case EditorMode::INSERT: modeStr = "插入模式"; break;
         case EditorMode::COMMAND: modeStr = "命令模式"; break;
+        case EditorMode::VISUAL_CHAR: modeStr = "可视字符模式"; break;
+        case EditorMode::VISUAL_LINE: modeStr = "可视行模式"; break;
+        case EditorMode::VISUAL_BLOCK: modeStr = "可视块模式"; break;
     }
     
     std::string statusLine = "模式: " + modeStr + " | 文件: " + 
