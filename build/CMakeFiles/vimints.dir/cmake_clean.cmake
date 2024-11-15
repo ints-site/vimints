@@ -7,6 +7,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/vimints.dir/src/main.cpp.obj.d"
   "CMakeFiles/vimints.dir/src/ui.cpp.obj"
   "CMakeFiles/vimints.dir/src/ui.cpp.obj.d"
+  "CMakeFiles/vimints.dir/src/utils.cpp.obj"
+  "CMakeFiles/vimints.dir/src/utils.cpp.obj.d"
   "libvimints.dll.a"
   "vimints.exe"
   "vimints.exe.manifest"

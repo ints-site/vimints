@@ -22,6 +22,7 @@ set(SOURCES
     src/editor.cpp
     src/ui.cpp
     src/command.cpp
+    src/utils.cpp  # 添加 utils.cpp
 )
 # 创建可执行文件
 add_executable(vimints ${SOURCES})

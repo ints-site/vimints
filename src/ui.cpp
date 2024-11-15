@@ -8,6 +8,7 @@
  * 3. 状态栏和消息显示
  */
 #include "../include/ui.h"
+#include "../include/utils.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -35,18 +36,6 @@ int getChar() {
     return ch;
     #endif
 }
-// Windows下的UTF-8到UTF-16转换输出函数
-void printUTF8(const std::string& text) {
-    #ifdef _WIN32
-    int wideCharLength = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, NULL, 0);
-    std::vector<wchar_t> wideCharBuffer(wideCharLength);
-    MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, wideCharBuffer.data(), wideCharLength);
-    
-    WriteConsoleW(GetStdHandle(STD_OUTPUT_HANDLE), wideCharBuffer.data(), wideCharLength - 1, NULL, NULL);
-    #else
-    std::cout << text;
-    #endif
-}
 UI::UI(Editor& editor) : m_editor(editor), m_statusMessage("") {}
 void UI::render() {
     // 清屏（跨平台）
@@ -69,13 +58,30 @@ void UI::handleInput() {
     switch (m_editor.getMode()) {
         case EditorMode::NORMAL:
             switch (ch) {
-                case 'i': m_editor.setMode(EditorMode::INSERT); break;
+                case 'i': 
+                    m_editor.setMode(EditorMode::INSERT); 
+                    m_statusMessage = "-- 插入模式 --";
+                    break;
                 case 'k': m_editor.moveCursorUp(); break;
                 case 'j': m_editor.moveCursorDown(); break;
                 case 'h': m_editor.moveCursorLeft(); break;
                 case 'l': m_editor.moveCursorRight(); break;
                 case 'x': m_editor.deleteText(); break;
-                case ':': m_editor.setMode(EditorMode::COMMAND); break;
+                case ':': 
+                    m_editor.setMode(EditorMode::COMMAND);
+                    m_statusMessage = ":";
+                    break;
+                case 'o': 
+                    m_editor.setMode(EditorMode::INSERT);
+                    m_editor.insertText("");  // 在当前行下方插入新行
+                    m_statusMessage = "-- 插入模式 --";
+                    break;
+                case 'O': 
+                    m_editor.setMode(EditorMode::INSERT);
+                    m_editor.m_cursorColumn = 0;
+                    m_editor.insertText("");  // 在当前行上方插入新行
+                    m_statusMessage = "-- 插入模式 --";
+                    break;
             }
             break;
         
@@ -83,10 +89,23 @@ void UI::handleInput() {
             switch (ch) {
                 case 27: // ESC键
                     m_editor.setMode(EditorMode::NORMAL);
+                    m_statusMessage = "";
+                    break;
+                case 13: // 回车键
+                    m_editor.insertText("");  // 插入空行
+                    break;
+                case 127: // 退格键
+                    if (m_editor.m_cursorColumn > 0) {
+                        m_editor.m_cursorColumn--;
+                        m_editor.deleteText();
+                    }
                     break;
                 default:
-                    // 插入字符
-                    m_editor.insertText(std::string(1, ch));
+                    // 直接在当前行插入字符
+                    if (ch >= 32 && ch < 127) {  // 可打印字符
+                        std::string charStr(1, static_cast<char>(ch));
+                        m_editor.insertText(charStr);
+                    }
                     break;
             }
             break;
@@ -95,16 +114,30 @@ void UI::handleInput() {
             switch (ch) {
                 case 27: // ESC键
                     m_editor.setMode(EditorMode::NORMAL);
+                    m_statusMessage = "";
                     break;
-                case 'w': 
-                    if (m_editor.saveFile()) {
-                        m_statusMessage = "文件已保存";
-                    } else {
-                        m_statusMessage = "保存失败";
+                case 13: // 回车键
+                    if (m_statusMessage == ":q") {
+                        // TODO: 实现退出逻辑
+                        exit(0);
+                    } else if (m_statusMessage == ":w") {
+                        if (m_editor.saveFile()) {
+                            m_statusMessage = "文件已保存";
+                        } else {
+                            m_statusMessage = "保存失败";
+                        }
                     }
                     break;
-                case 'q': 
-                    // TODO: 实现退出逻辑
+                case 127: // 退格键
+                    if (m_statusMessage.length() > 1) {
+                        m_statusMessage = m_statusMessage.substr(0, m_statusMessage.length() - 1);
+                    }
+                    break;
+                default:
+                    // 在命令模式下输入字符
+                    if (ch >= 32 && ch < 127) {
+                        m_statusMessage += static_cast<char>(ch);
+                    }
                     break;
             }
             break;

@@ -49,6 +49,13 @@ public:
     // 新增的公共访问方法
     const std::vector<std::string>& getLines() const;
     const std::string& getCurrentFile() const;
+    // 公开光标位置，允许 UI 直接管理
+    int m_cursorLine;
+    int m_cursorColumn;
+    // 新增方法：获取当前行文本
+    std::string getCurrentLineText() const;
+    // 新增方法：获取当前光标位置
+    std::pair<int, int> getCursorPosition() const;
 private:
     // 文本缓冲区
     std::vector<std::string> m_lines;
@@ -56,8 +63,5 @@ private:
     std::string m_currentFile;
     // 当前编辑模式
     EditorMode m_currentMode;
-    // 光标位置
-    int m_cursorLine;
-    int m_cursorColumn;
 };
 #endif // EDITOR_H

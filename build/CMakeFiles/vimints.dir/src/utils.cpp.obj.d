@@ -1,6 +1,6 @@
-CMakeFiles/vimints.dir/src/ui.cpp.obj: \
- C:\Users\FanYukin\cline\vimints\src\ui.cpp \
- C:/Users/FanYukin/cline/vimints/include/ui.h \
+CMakeFiles/vimints.dir/src/utils.cpp.obj: \
+ C:\Users\FanYukin\cline\vimints\src\utils.cpp \
+ C:/Users/FanYukin/cline/vimints/include/utils.h \
  C:/msys64/ucrt64/include/c++/14.2.0/string \
  C:/msys64/ucrt64/include/c++/14.2.0/bits/requires_hosted.h \
  C:/msys64/ucrt64/include/c++/14.2.0/x86_64-w64-mingw32/bits/c++config.h \
@@ -85,13 +85,11 @@ CMakeFiles/vimints.dir/src/ui.cpp.obj: \
  C:/msys64/ucrt64/include/c++/14.2.0/bits/functional_hash.h \
  C:/msys64/ucrt64/include/c++/14.2.0/bits/hash_bytes.h \
  C:/msys64/ucrt64/include/c++/14.2.0/bits/basic_string.tcc \
- C:/Users/FanYukin/cline/vimints/include/editor.h \
  C:/msys64/ucrt64/include/c++/14.2.0/vector \
  C:/msys64/ucrt64/include/c++/14.2.0/bits/stl_uninitialized.h \
  C:/msys64/ucrt64/include/c++/14.2.0/bits/stl_vector.h \
  C:/msys64/ucrt64/include/c++/14.2.0/bits/stl_bvector.h \
  C:/msys64/ucrt64/include/c++/14.2.0/bits/vector.tcc \
- C:/Users/FanYukin/cline/vimints/include/utils.h \
  C:/msys64/ucrt64/include/windows.h C:/msys64/ucrt64/include/sdkddkver.h \
  C:/msys64/ucrt64/include/excpt.h \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/stdarg.h \
@@ -341,12 +339,4 @@ CMakeFiles/vimints.dir/src/ui.cpp.obj: \
  C:/msys64/ucrt64/include/c++/14.2.0/bits/basic_ios.tcc \
  C:/msys64/ucrt64/include/c++/14.2.0/bits/ostream.tcc \
  C:/msys64/ucrt64/include/c++/14.2.0/istream \
- C:/msys64/ucrt64/include/c++/14.2.0/bits/istream.tcc \
- C:/msys64/ucrt64/include/c++/14.2.0/algorithm \
- C:/msys64/ucrt64/include/c++/14.2.0/bits/stl_algo.h \
- C:/msys64/ucrt64/include/c++/14.2.0/bits/algorithmfwd.h \
- C:/msys64/ucrt64/include/c++/14.2.0/bits/stl_heap.h \
- C:/msys64/ucrt64/include/c++/14.2.0/bits/uniform_int_dist.h \
- C:/msys64/ucrt64/include/c++/14.2.0/bits/stl_tempbuf.h \
- C:/msys64/ucrt64/include/conio.h \
- C:/msys64/ucrt64/include/sec_api/conio_s.h
+ C:/msys64/ucrt64/include/c++/14.2.0/bits/istream.tcc

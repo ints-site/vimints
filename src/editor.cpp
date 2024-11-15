@@ -61,16 +61,73 @@ bool Editor::saveFileAs(const std::string& filename) {
 }
 // 插入文本
 void Editor::insertText(const std::string& text) {
-    if (static_cast<size_t>(m_cursorLine) >= m_lines.size()) {
-        m_lines.push_back(text);
-    } else {
-        m_lines.insert(m_lines.begin() + m_cursorLine, text);
+    // 如果文本为空，插入一个空行
+    if (text.empty()) {
+        if (m_lines.empty()) {
+            m_lines.push_back("");
+        } else {
+            m_lines.insert(m_lines.begin() + static_cast<std::vector<std::string>::size_type>(m_cursorLine) + 1, "");
+            m_cursorLine++;
+        }
+        return;
     }
+    
+    // 如果行列表为空，直接添加新行
+    if (m_lines.empty()) {
+        m_lines.push_back(text);
+        m_cursorColumn = text.length(); // 更新光标列
+        return;
+    }
+    
+    // 确保光标行有效
+    if (m_cursorLine < 0) {
+        m_cursorLine = 0;
+    }
+    if (m_cursorLine >= static_cast<int>(m_lines.size())) {
+        m_lines.push_back(""); // 如果超出范围，添加新行
+        m_cursorLine = static_cast<int>(m_lines.size()) - 1;
+    }
+
+    // 获取当前行的引用
+    std::string& currentLine = m_lines[static_cast<std::vector<std::string>::size_type>(m_cursorLine)];
+    
+    // 确保光标列有效
+    if (m_cursorColumn < 0) {
+        m_cursorColumn = 0;
+    }
+    if (m_cursorColumn > static_cast<int>(currentLine.length())) {
+        m_cursorColumn = static_cast<int>(currentLine.length());
+    }
+
+    // 在当前行的光标位置插入文本
+    currentLine = currentLine.substr(0, m_cursorColumn) + text + currentLine.substr(m_cursorColumn);
+    
+    // 更新光标位置
+    m_cursorColumn += text.length();
 }
 // 删除文本
 void Editor::deleteText() {
-    if (!m_lines.empty() && static_cast<size_t>(m_cursorLine) < m_lines.size()) {
-        m_lines.erase(m_lines.begin() + m_cursorLine);
+    if (!m_lines.empty() && m_cursorLine < static_cast<int>(m_lines.size())) {
+        std::string& currentLine = m_lines[static_cast<std::vector<std::string>::size_type>(m_cursorLine)];
+        
+        // 如果光标不在行首，删除光标前的字符
+        if (m_cursorColumn > 0 && m_cursorColumn <= static_cast<int>(currentLine.length())) {
+            currentLine.erase(m_cursorColumn - 1, 1);
+            m_cursorColumn--;
+        } 
+        // 如果光标在行首且不是第一行，合并当前行和上一行
+        else if (m_cursorLine > 0) {
+            std::string prevLine = m_lines[static_cast<std::vector<std::string>::size_type>(m_cursorLine - 1)];
+            m_cursorColumn = prevLine.length();
+            m_lines[static_cast<std::vector<std::string>::size_type>(m_cursorLine - 1)] += currentLine;
+            m_lines.erase(m_lines.begin() + static_cast<std::vector<std::string>::size_type>(m_cursorLine));
+            m_cursorLine--;
+        }
+
+        // 如果删除后没有行，添加一个空行
+        if (m_lines.empty()) {
+            m_lines.push_back("");
+        }
     }
 }
 // 复制文本（暂时为空实现）
@@ -85,21 +142,37 @@ void Editor::pasteText() {
 void Editor::moveCursorUp() {
     if (m_cursorLine > 0) {
         m_cursorLine--;
+        // 保持光标列在新行的有效范围内
+        if (m_cursorColumn > static_cast<int>(m_lines[m_cursorLine].length())) {
+            m_cursorColumn = static_cast<int>(m_lines[m_cursorLine].length());
+        }
     }
 }
 void Editor::moveCursorDown() {
-    if (static_cast<size_t>(m_cursorLine) < m_lines.size() - 1) {
+    if (m_cursorLine < static_cast<int>(m_lines.size()) - 1) {
         m_cursorLine++;
+        // 保持光标列在新行的有效范围内
+        if (m_cursorColumn > static_cast<int>(m_lines[m_cursorLine].length())) {
+            m_cursorColumn = static_cast<int>(m_lines[m_cursorLine].length());
+        }
     }
 }
 void Editor::moveCursorLeft() {
     if (m_cursorColumn > 0) {
         m_cursorColumn--;
+    } else if (m_cursorLine > 0) {
+        // 如果在行首，移动到上一行末尾
+        m_cursorLine--;
+        m_cursorColumn = static_cast<int>(m_lines[m_cursorLine].length());
     }
 }
 void Editor::moveCursorRight() {
-    if (static_cast<size_t>(m_cursorColumn) < m_lines[m_cursorLine].length()) {
+    if (m_cursorColumn < static_cast<int>(m_lines[m_cursorLine].length())) {
         m_cursorColumn++;
+    } else if (m_cursorLine < static_cast<int>(m_lines.size()) - 1) {
+        // 如果在行尾，移动到下一行行首
+        m_cursorLine++;
+        m_cursorColumn = 0;
     }
 }
 // 模式管理
@@ -115,4 +188,15 @@ const std::vector<std::string>& Editor::getLines() const {
 }
 const std::string& Editor::getCurrentFile() const {
     return m_currentFile;
+}
+
+std::string Editor::getCurrentLineText() const {
+    if (m_cursorLine >= 0 && m_cursorLine < static_cast<int>(m_lines.size())) {
+        return m_lines[static_cast<std::vector<std::string>::size_type>(m_cursorLine)];
+    }
+    return "";
+}
+
+std::pair<int, int> Editor::getCursorPosition() const {
+    return {m_cursorLine, m_cursorColumn};
 }

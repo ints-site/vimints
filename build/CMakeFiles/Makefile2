@@ -84,12 +84,12 @@ clean: CMakeFiles/vimints.dir/clean
 CMakeFiles/vimints.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\vimints.dir\build.make CMakeFiles/vimints.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\vimints.dir\build.make CMakeFiles/vimints.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\FanYukin\cline\vimints\build\CMakeFiles --progress-num=1,2,3,4,5 "Built target vimints"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\FanYukin\cline\vimints\build\CMakeFiles --progress-num=1,2,3,4,5,6 "Built target vimints"
 .PHONY : CMakeFiles/vimints.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/vimints.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\FanYukin\cline\vimints\build\CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\FanYukin\cline\vimints\build\CMakeFiles 6
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/vimints.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\FanYukin\cline\vimints\build\CMakeFiles 0
 .PHONY : CMakeFiles/vimints.dir/rule

@@ -269,6 +269,30 @@ src/ui.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\vimints.dir\build.make CMakeFiles/vimints.dir/src/ui.cpp.s
 .PHONY : src/ui.cpp.s
 
+src/utils.obj: src/utils.cpp.obj
+.PHONY : src/utils.obj
+
+# target to build an object file
+src/utils.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\vimints.dir\build.make CMakeFiles/vimints.dir/src/utils.cpp.obj
+.PHONY : src/utils.cpp.obj
+
+src/utils.i: src/utils.cpp.i
+.PHONY : src/utils.i
+
+# target to preprocess a source file
+src/utils.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\vimints.dir\build.make CMakeFiles/vimints.dir/src/utils.cpp.i
+.PHONY : src/utils.cpp.i
+
+src/utils.s: src/utils.cpp.s
+.PHONY : src/utils.s
+
+# target to generate assembly for a file
+src/utils.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\vimints.dir\build.make CMakeFiles/vimints.dir/src/utils.cpp.s
+.PHONY : src/utils.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -294,6 +318,9 @@ help:
 	@echo ... src/ui.obj
 	@echo ... src/ui.i
 	@echo ... src/ui.s
+	@echo ... src/utils.obj
+	@echo ... src/utils.i
+	@echo ... src/utils.s
 .PHONY : help
 
 

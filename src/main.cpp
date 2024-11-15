@@ -33,8 +33,13 @@ int main(int argc, char* argv[]) {
     _setmode(_fileno(stdout), _O_U16TEXT);
     #endif
     
-    // 设置全局区域设置为支持 UTF-8
-    std::locale::global(std::locale("zh_CN.UTF-8"));
+    // 尝试设置本地化，使用更通用的方法
+    try {
+        std::locale::global(std::locale(""));  // 使用系统默认区域设置
+    } catch (const std::runtime_error&) {
+        // 如果失败，使用 C 区域设置
+        std::locale::global(std::locale::classic());
+    }
     
     try {
         // 创建编辑器实例
@@ -50,7 +55,7 @@ int main(int argc, char* argv[]) {
         if (argc > 1) {
             std::string filename(argv[1]);
             if (!editor.openFile(filename)) {
-                printUTF8("无法打开文件: " + filename + "\n");
+                printUTF8(std::string("无法打开文件: ") + filename + "\n");
                 return 1;
             }
         }
@@ -68,7 +73,7 @@ int main(int argc, char* argv[]) {
         }
     }
     catch (const std::exception& e) {
-        printUTF8("发生错误: " + std::string(e.what()) + "\n");
+        printUTF8(std::string("发生错误: ") + e.what() + "\n");
         return 1;
     }
     
