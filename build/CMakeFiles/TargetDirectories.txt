@@ -1,0 +1,7 @@
+C:/Users/FanYukin/cline/vimints/build/CMakeFiles/vimints.dir
+C:/Users/FanYukin/cline/vimints/build/CMakeFiles/edit_cache.dir
+C:/Users/FanYukin/cline/vimints/build/CMakeFiles/rebuild_cache.dir
+C:/Users/FanYukin/cline/vimints/build/CMakeFiles/list_install_components.dir
+C:/Users/FanYukin/cline/vimints/build/CMakeFiles/install.dir
+C:/Users/FanYukin/cline/vimints/build/CMakeFiles/install/local.dir
+C:/Users/FanYukin/cline/vimints/build/CMakeFiles/install/strip.dir
