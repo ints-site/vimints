@@ -19,7 +19,7 @@
 #include <fcntl.h>
 #endif
 #include "../include/editor.h"
-#include "../include/ui.h"
+#include "../include/ui_ncurses.h"
 #include "../include/command.h"
 #include "../include/utils.h"
 int main(int argc, char* argv[]) {
@@ -45,32 +45,13 @@ int main(int argc, char* argv[]) {
         // 创建编辑器实例
         Editor editor;
         
-        // 创建UI实例
-        UI ui(editor);
-        
-        // 创建命令处理器实例
-        CommandProcessor cmdProcessor(editor);
-        
-        // 处理命令行参数
+        // 如果提供了文件名，打开文件
         if (argc > 1) {
-            std::string filename(argv[1]);
-            if (!editor.openFile(filename)) {
-                printUTF8(std::string("无法打开文件: ") + filename + "\n");
-                return 1;
-            }
+            editor.openFile(argv[1]);
         }
         
-        // 主程序循环
-        bool running = true;
-        while (running) {
-            // 渲染界面
-            ui.render();
-            
-            // 处理用户输入
-            ui.handleInput();
-            
-            // TODO: 添加退出条件
-        }
+        NCursesUI ui(editor);
+        ui.run();
     }
     catch (const std::exception& e) {
         printUTF8(std::string("发生错误: ") + e.what() + "\n");

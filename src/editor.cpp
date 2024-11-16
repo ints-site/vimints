@@ -89,7 +89,7 @@ void Editor::insertText(const std::string& text) {
         m_cursorLine = 0;
     }
     if (m_cursorLine >= static_cast<int>(m_lines.size())) {
-        m_lines.push_back(""); // 如果超出范围，添加新行
+        m_lines.push_back(""); // 如��超出范围，添加新��
         m_cursorLine = static_cast<int>(m_lines.size()) - 1;
     }
 
@@ -251,17 +251,19 @@ void Editor::startVisualMode(EditorMode visualMode) {
 }
 
 void Editor::selectText() {
-    // Implement text selection logic based on visual mode
-    // This is a simplified version and can be expanded
+    // 实现基于当前模式的文本选择逻辑
     switch (m_currentMode) {
         case EditorMode::VISUAL_CHAR:
-            // Character-level selection
+            // 字符级选择逻辑
+            // TODO: 完善字符级选择
             break;
         case EditorMode::VISUAL_LINE:
-            // Line-level selection
+            // 行级选择逻辑
+            // TODO: 完善行级选择
             break;
         case EditorMode::VISUAL_BLOCK:
-            // Block-level selection
+            // 块级选择逻辑
+            // TODO: 完善块级选择
             break;
         default:
             break;
@@ -396,13 +398,34 @@ void VimEditor::handleVisualModeInput(char key) {
 }
 
 void VimEditor::handleCommandModeInput(char key) {
-    // 这里可以添加命令模式下的输入处理逻辑
-    // 例如处理命令输入、退出命令模式等
     switch(key) {
         case 27: // ESC键
             switchMode(EditorMode::NORMAL);
             break;
-        // 可以添加更多命令模式下的按键处理
+        case 'w': 
+            // 保存文件
+            if (saveFile()) {
+                // m_statusMessage = "文件已保存";
+            } else {
+                // m_statusMessage = "保存失败";
+            }
+            switchMode(EditorMode::NORMAL);
+            break;
+        case 'q': 
+            // 退出编辑器
+            exit(0);
+            break;
+        case 's': 
+            // 保存并退出
+            if (saveFile()) {
+                exit(0);
+            } else {
+                // m_statusMessage = "保存失败，无法退出";
+            }
+            break;
+        // 添加更多命令处理
+        default:
+            break;
     }
 }
 

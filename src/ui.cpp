@@ -38,13 +38,10 @@ int getChar() {
 }
 UI::UI(Editor& editor) : m_editor(editor), m_statusMessage("") {}
 void UI::render() {
-    // 清屏（跨平台）
-    #ifdef _WIN32
-    system("cls");
-    #else
-    system("clear");
-    #endif
-    
+    // 使用更高效的渲染方式，避免全屏清除导致闪烁
+    printUTF8("\x1b[2J");    // 清除整个屏幕
+    printUTF8("\x1b[H");     // 将光标移动到左上角
+
     // 渲染文件内容
     const auto& lines = m_editor.getLines();
     for (size_t i = 0; i < lines.size(); ++i) {
@@ -52,6 +49,9 @@ void UI::render() {
     }
     
     displayStatusBar();
+    
+    // 显示光标
+    printUTF8("\x1b[?25h");
 }
 void UI::handleInput() {
     int ch = getChar();

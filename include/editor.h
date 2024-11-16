@@ -105,6 +105,9 @@ public:
     // 命令模式相关方法
     bool executeCommand(const std::string& command);
     std::vector<std::string> splitCommand(const std::string& command);
+
+    // 添加 deleteText 的重载声明
+    void deleteText(DeleteType type);
 };
 
 // 新增 VimEditor 类，继承自 Editor

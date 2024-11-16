@@ -50,6 +50,13 @@ bool CommandProcessor::executeCommand(const std::string& cmd, const std::vector<
         m_editor.resetCurrentFile();
         return true;
     }
+
+    if (cmd == "replace" || cmd == "r") {
+        if (args.size() < 2) {
+            return false; // 需要旧文本和新文本
+        }
+        return m_editor.replaceText(args[0], args[1], true);
+    }
     
     return false;
 }
